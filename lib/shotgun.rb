@@ -2,6 +2,10 @@ require 'rack'
 require 'rack/utils'
 require 'thread'
 
+if RUBY_PLATFORM =~ /(win|w)32$/ 
+  require 'win32/process'
+end
+
 class Shotgun
   include Rack::Utils
   attr_reader :rackup_file
@@ -36,7 +40,6 @@ class Shotgun
   # ==== Stuff that happens in the parent process
 
   def proceed_as_parent
-    rand # Reseeds 
     @writer.close
     result = Marshal.load(@reader)
     @reader.close
